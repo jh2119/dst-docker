@@ -1,0 +1,20 @@
+# ##############################################################################
+# ./docker-compose.yml
+#
+# Copyright 2018. John David Hall
+# ##############################################################################
+
+version: '3'
+services:
+    dst:
+        build: .
+        volumes:
+            - dst-data:/srv/dst/data
+        ports:
+            - 11000:11000
+            - 11001:11001
+        entrypoint: /bin/bash
+        stdin_open: true
+        tty: true
+volumes:
+    dst-data:
