@@ -30,5 +30,7 @@ docker volumes ls
 
 ## References
 Initial guide: http://steamcommunity.com/sharedfiles/filedetails/?id=590565473
+
 Using ```steamcmd```: https://developer.valvesoftware.com/wiki/Command_Line_Options#SteamCMD
+
 More about ```steamcmd```: https://developer.valvesoftware.com/wiki/SteamCMD
