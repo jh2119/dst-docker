@@ -6,15 +6,36 @@
 
 version: '3'
 services:
-    dst:
+    dst-master:
         build: .
+        networks:
+            - dst-lan
         volumes:
-            - dst-data:/srv/dst/data
+            - dst-data:/home/dst/.klei/DoNotStarveTogether/
         ports:
-            - 11000:11000
-            - 11001:11001
-        entrypoint: /bin/bash
+            - 10998:10998/udp
+        environment:
+            - SHARD=Master
+            - CLUSTER=DTHDST01
         stdin_open: true
         tty: true
+
+    dst-caves:
+        build: .
+        networks:
+            - dst-lan
+        volumes:
+            - dst-data:/home/dst/.klei/DoNotStarveTogether/
+        ports:
+            - 10999:10999/udp
+        links:
+           - dst-master
+        environment:
+            - SHARD=Caves
+            - CLUSTER=DTHDST01
+
 volumes:
     dst-data:
+
+networks:
+    dst-lan:

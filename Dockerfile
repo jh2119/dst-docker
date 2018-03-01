@@ -1,25 +1,28 @@
-FROM i386/ubuntu:xenial
+FROM ubuntu:xenial
 
-RUN apt-get update \
-    && apt-get install -y wget libcurl3-gnutls:i386 \
-    && dpkg --add-architecture i386 \
-    && useradd --no-log-init -r  dst \
-    && mkdir -p /srv/dst/server \
-    && mkdir -p /srv/dst/data \
-    && mkdir -p /srv/dst/scripts \
-    && wget https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz \
-    && tar -xvzf steamcmd_linux.tar.gz -C /srv/dst/
+MAINTAINER John Hall <me@johnhall.us>
 
-COPY scripts/ /srv/dst/scripts
+RUN dpkg --add-architecture i386 \
+    && apt-get update \
+    && apt-get install -y wget lib32gcc1 lib32stdc++6 libcurl4-gnutls-dev:i386 \
+    && apt-get clean \
+    && useradd -ms /bin/bash dst 
 
-RUN chown dst:dst -R /srv/dst
+RUN mkdir -p /home/dst/.klei/DoNotStarveTogether \
+    && chown dst:dst -R /home/dst/.klei/
 
 USER dst
+WORKDIR /home/dst
 
-WORKDIR /srv/dst/
+COPY ["scripts/", "/home/dst"]
 
-RUN ./steamcmd.sh +runscript ./scripts/update_dst_ds.txt
+RUN wget -qO- https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz | tar xvz -C /home/dst \
+    && mkdir server \
+    && ./steamcmd.sh +runscript ./update_dst_ds.txt
 
+ENV SHARD Master
 
-#RUN bash ./scripts/overworld_start.sh \
-#    && bash ./scripts/underworld_start.sh
+ENV CLUSTER DST01
+
+ENTRYPOINT ["/home/dst/start-server.sh"]
+#ENTRYPOINT ["/bin/bash"]
