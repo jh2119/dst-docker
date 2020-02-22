@@ -1,41 +1,30 @@
-# ##############################################################################
-# ./docker-compose.yml
-#
-# Copyright 2018. John David Hall
-# ##############################################################################
-
 version: '3'
 services:
-    dst-master:
+    master:
         build: .
-        networks:
-            - dst-lan
         volumes:
-            - dst-data:/home/dst/.klei/DoNotStarveTogether/
+            - dst-data:/home/steam/.klei/DoNotStarveTogether/
         ports:
-            - 10998:10998/udp
+            - 10999:10999/udp
         environment:
             - SHARD=Master
-            - CLUSTER=DTHDST01
+            - CLUSTER=KDST101
         stdin_open: true
         tty: true
 
-    dst-caves:
+    caves:
         build: .
-        networks:
-            - dst-lan
         volumes:
-            - dst-data:/home/dst/.klei/DoNotStarveTogether/
+            - dst-data:/home/steam/.klei/DoNotStarveTogether/
         ports:
-            - 10999:10999/udp
+            - 10998:10998/udp
         links:
-           - dst-master
+           - master:master
         environment:
             - SHARD=Caves
-            - CLUSTER=DTHDST01
+            - CLUSTER=KDST101
+        stdin_open: true
+        tty: true
 
 volumes:
     dst-data:
-
-networks:
-    dst-lan:

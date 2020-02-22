@@ -1,9 +1,0 @@
-// update_dst_ds.txt
-// pulls Don't Starve Together dedicated server form Steam
-//
-@ShutdownOnFailedCommand 1
-@NoPromptForPassword 1
-login anonymous
-force_install_dir /home/dst/server
-app_update 343050 validate
-quit

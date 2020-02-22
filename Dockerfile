@@ -1,28 +1,32 @@
-FROM ubuntu:xenial
+FROM ubuntu:latest
 
 MAINTAINER John Hall <me@johnhall.us>
 
-RUN dpkg --add-architecture i386 \
-    && apt-get update \
-    && apt-get install -y wget lib32gcc1 lib32stdc++6 libcurl4-gnutls-dev:i386 \
-    && apt-get clean \
-    && useradd -ms /bin/bash dst 
-
-RUN mkdir -p /home/dst/.klei/DoNotStarveTogether \
-    && chown dst:dst -R /home/dst/.klei/
-
-USER dst
-WORKDIR /home/dst
-
-COPY ["scripts/", "/home/dst"]
-
-RUN wget -qO- https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz | tar xvz -C /home/dst \
-    && mkdir server \
-    && ./steamcmd.sh +runscript ./update_dst_ds.txt
+ARG PUID=1000
 
 ENV SHARD Master
+ENV CLUSTER dst-docker
 
-ENV CLUSTER DST01
+RUN dpkg --add-architecture i386
+RUN apt update
+RUN apt install -y wget lib32stdc++6 lib32gcc1 libcurl4-gnutls-dev:i386
 
-ENTRYPOINT ["/home/dst/start-server.sh"]
-#ENTRYPOINT ["/bin/bash"]
+RUN useradd -u $PUID -m steam
+RUN mkdir -p /home/steam/steamcmd
+RUN wget -qO- https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz | tar xvz -C /home/steam/steamcmd
+
+RUN apt purge -y wget
+RUN apt clean autoclean
+RUN apt clean 
+RUN apt autoremove -y
+RUN rm -rf /var/lib/apt/lists/*
+
+COPY ["scripts/run_dedicated_server.sh", "/home/steam"]
+RUN chmod +x /home/steam/run_dedicated_server.sh
+RUN mkdir -p ~/.klei/DoNotStarveTogether
+RUN chown steam:steam -R /home/steam/
+
+USER steam
+WORKDIR /home/steam
+
+ENTRYPOINT ["/home/steam/run_dedicated_server.sh"]
