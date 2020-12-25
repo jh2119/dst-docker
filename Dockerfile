@@ -28,5 +28,7 @@ RUN chown steam:steam -R /home/steam/
 
 USER steam
 WORKDIR /home/steam
+RUN /home/steam/steamcmd/steamcmd.sh +force_install_dir "/home/steam/dontstarvetogether_dedicated_server" +login anonymous +app_update 343050 validate +quit
+
 
 ENTRYPOINT ["/home/steam/run_dedicated_server.sh"]

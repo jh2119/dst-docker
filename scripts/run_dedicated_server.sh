@@ -27,7 +27,7 @@ check_for_file "$dontstarve_dir/$cluster_name/cluster.ini"
 check_for_file "$dontstarve_dir/$cluster_name/cluster_token.txt"
 check_for_file "$dontstarve_dir/$cluster_name/$cluster_shard/server.ini"
 
-./steamcmd.sh +force_install_dir "$install_dir" +login anonymous +app_update 343050 validate +quit
+#./steamcmd.sh +force_install_dir "$install_dir" +login anonymous +app_update 343050 validate +quit
 
 check_for_file "$install_dir/bin"
 
